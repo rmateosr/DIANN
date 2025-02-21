@@ -1,13 +1,17 @@
-name: Build and Save DIA-NN Docker Image
+name: Build and Save DIA-NN Apptainer Image
 
 on:
   workflow_dispatch:
 
 jobs:
-  save-tar:
+  save-sif:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Install Apptainer
+        run: |
+          sudo apt update && sudo apt install -y apptainer
+
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
@@ -23,8 +27,12 @@ jobs:
         run: |
           docker save -o diann-2.0.2.tar ghcr.io/rmateosr/diann:2.0.2
 
-      - name: Upload image as artifact
+      - name: Convert `.tar` to Apptainer `.sif`
+        run: |
+          apptainer build diann-2.0.2.sif docker-archive://diann-2.0.2.tar
+
+      - name: Upload Apptainer image as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: diann-2.0.2-tar
-          path: diann-2.0.2.tar
+          name: diann-2.0.2-sif
+          path: diann-2.0.2.sif
