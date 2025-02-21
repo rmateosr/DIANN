@@ -1,14 +1,21 @@
-name: Build and Push Docker Image
+name: Build and Push DIA-NN Docker Image
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout repository
@@ -21,9 +28,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: Build Docker image
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository }}/diann:2.0
-          IMAGE_NAME=$(echo $IMAGE_NAME | tr '[:upper:]' '[:lower:]')  # Ensure lowercase
-          docker build -t $IMAGE_NAME .
-          docker push $IMAGE_NAME
+          docker build -t ghcr.io/${{ github.repository_owner }}/diann:2.0.2 .
+
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/diann:2.0.2
