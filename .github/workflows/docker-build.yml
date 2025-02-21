@@ -26,7 +26,7 @@ jobs:
         run: |
           docker pull ghcr.io/rmateosr/diann:2.0.2
 
-      - name: Create a new container without executing the entrypoint
+      - name: Create a new container without running it
         run: |
           docker create --name diann-container --entrypoint /bin/sh ghcr.io/rmateosr/diann:2.0.2
 
