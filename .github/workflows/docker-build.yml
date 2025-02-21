@@ -11,9 +11,9 @@ jobs:
       - name: Install Apptainer
         run: |
           sudo apt update
-          sudo apt install -y squashfs-tools
+          sudo apt install -y squashfs-tools uidmap dbus-user-session
           wget https://github.com/apptainer/apptainer/releases/download/v1.2.4/apptainer_1.2.4_amd64.deb
-          sudo dpkg -i apptainer_1.2.4_amd64.deb
+          sudo dpkg -i apptainer_1.2.4_amd64.deb || sudo apt-get install -f -y
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
