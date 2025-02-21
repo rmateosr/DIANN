@@ -25,10 +25,18 @@ jobs:
       - name: Pull Docker image
         run: |
           docker pull ghcr.io/rmateosr/diann:2.0.2
+          docker create --name diann-container ghcr.io/rmateosr/diann:2.0.2
+
+      - name: Extract DIA-NN ZIP inside the container
+        run: |
+          docker start diann-container
+          docker exec diann-container unzip /diann-2.0.2.Linux.zip -d /diann-2.0.2
+          docker exec diann-container chmod +x /diann-2.0.2/diann-linux
+          docker commit diann-container ghcr.io/rmateosr/diann-extracted:2.0.2
 
       - name: Save Docker image as .tar
         run: |
-          docker save -o diann-2.0.2.tar ghcr.io/rmateosr/diann:2.0.2
+          docker save -o diann-2.0.2.tar ghcr.io/rmateosr/diann-extracted:2.0.2
 
       - name: Convert `.tar` to Apptainer `.sif`
         run: |
