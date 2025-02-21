@@ -26,13 +26,14 @@ jobs:
         run: |
           docker pull ghcr.io/rmateosr/diann:2.0.2
 
-      - name: Create a new container without running it
+      - name: Create a new container and keep it running
         run: |
-          docker create --name diann-container --entrypoint /bin/sh ghcr.io/rmateosr/diann:2.0.2
+          docker create -it --name diann-container --entrypoint /bin/sh ghcr.io/rmateosr/diann:2.0.2
+          docker start diann-container
+          sleep 5  # Ensure it has time to start
 
       - name: Extract DIA-NN ZIP inside the container
         run: |
-          docker start diann-container
           docker exec diann-container unzip /diann-2.0.2.Linux.zip -d /diann-2.0.2
           docker exec diann-container chmod +x /diann-2.0.2/diann-linux
           docker commit diann-container ghcr.io/rmateosr/diann-extracted:2.0.2
