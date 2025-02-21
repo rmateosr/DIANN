@@ -24,7 +24,7 @@ jobs:
           docker save -o diann-2.0.2.tar ghcr.io/rmateosr/diann:2.0.2
 
       - name: Upload image as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: diann-2.0.2-tar
           path: diann-2.0.2.tar
