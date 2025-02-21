@@ -21,11 +21,13 @@ RUN wget https://github.com/vdemichev/DiaNN/releases/download/2.0/DIA-NN-2.0.2-A
     unzip diann.zip && \
     rm diann.zip
 
-# Set appropriate permissions
-RUN chmod -R 775 DIA-NN-2.0.2-Academia-Linux
+# Find the extracted directory name and set correct permissions
+RUN extracted_dir=$(ls -d DIA-NN*/ 2>/dev/null | head -n 1) && \
+    chmod -R 775 "$extracted_dir" && \
+    echo "Extracted directory: $extracted_dir"
 
-# Set working directory
-WORKDIR /DIA-NN-2.0.2-Academia-Linux
+# Set working directory dynamically
+WORKDIR $extracted_dir
 
-# Define entrypoint (adjust as needed)
+# Define entrypoint (adjust if needed)
 ENTRYPOINT ["./diann"]
